@@ -1,33 +1,54 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Spiel | Kabomm</title>
+    <title>Document</title>
 </head>
 <body>
-    
     <script type="module">
-        import kaboom from "https://unpkg.com/kaboom/dist/kaboom.mjs";
 
+        // import kaboom lib
+        import kaboom from "https://unpkg.com/kaboom/dist/kaboom.mjs";
+        
         // initialize kaboom context
         kaboom();
-        loadSprite("player", "player.png")
-        loadSprite("Button1", "Level1Buton.png")
+        
+        // add a piece of text at position (120, 80)
 
+
+
+        loadSprite("player", "https://raw.githubusercontent.com/Geisterkopf19/Geisterkopf19.github.io/main/player.png")
+        loadSprite("Button1", "https://raw.githubusercontent.com/Geisterkopf19/Geisterkopf19.github.io/main/Level1Buton.png")
         // add something to screen
         var lo = 0 
         const MOVE_SPEED = 480
         const jump = 700
+        const yend =  800
+        scene("map", () => {
+            add([
+            text("hiere kommt die map hin."),
+            pos(120, 80),
+        ]);
+        })
         scene("Level-1", () => {
             const player = add([
                 sprite("player"),
-                pos(80, 40),
+                pos(48, 30),
                 area(),
                 body(),
             ])
-
+            player.onUpdate(() => {
+                // center camera to player
+                camPos(player.pos)
+                // check fall death
+                console.log( player.pos.y);
+                if (player.pos.y > yend) {
+                    go("map")
+                    
+                }
+            })
             //sprigen 
             onKeyPress("space", () => {
             if (player.isGrounded()) {
@@ -63,11 +84,6 @@
                 player.move(-MOVE_SPEED, 0)
             })
 
-            onUpdate(() => {
-                add([
-                    camPos(player.pos)
-                ])  
-            })
             //boden
             add([
                 rect(width(), 48),
@@ -91,7 +107,7 @@
             ]);
         })
         go("Level-1")
+
     </script>
-    
 </body>
 </html>
