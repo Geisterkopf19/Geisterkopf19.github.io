@@ -21,16 +21,46 @@
 
         loadSprite("player", "https://raw.githubusercontent.com/Geisterkopf19/Geisterkopf19.github.io/main/player.png")
         loadSprite("Button1", "https://raw.githubusercontent.com/Geisterkopf19/Geisterkopf19.github.io/main/Level1Buton.png")
+        loadSprite("background", "https://raw.githubusercontent.com/Geisterkopf19/Geisterkopf19.github.io/main/map-1.png")
+        loadSprite("gegener", "https://raw.githubusercontent.com/Geisterkopf19/Geisterkopf19.github.io/main/gegner.png")
+        loadSprite("block", "https://raw.githubusercontent.com/Geisterkopf19/Geisterkopf19.github.io/main/block.png")
         // add something to screen
         var lo = 0 
         const MOVE_SPEED = 480
         const jump = 700
-        const yend =  800
+        const yend =  1300
+        var gegenermove = 0
         scene("map", () => {
-            add([
-            text("hiere kommt die map hin."),
-            pos(120, 80),
-        ]);
+            layers([
+                "objekte",
+            ])
+            function addlvButton(sp, p, f) {
+
+                const btn = add([
+                    sprite(sp),
+                    pos(p),
+                    area({ cursor: "pointer", }),
+                    scale(1),
+                    origin("center"),
+                    layer("objekte"),
+                ])
+
+                btn.onClick(f)
+
+            }
+            
+            addlvButton("Button1", vec2(680, 300), () => go("Level-1"))
+
+
+
+            const background = add([
+                sprite("background"),
+                pos(600, 400),
+                origin("center"),
+                scale(1),
+                fixed()
+            ]);
+            
         })
         scene("Level-1", () => {
             const player = add([
@@ -39,15 +69,50 @@
                 area(),
                 body(),
             ])
+            const gegener = add ([
+                sprite("gegener"),
+                pos(1000, 30),
+                area(),
+                body(),
+            ])
+            const block = add ([
+                sprite("block"),
+                pos(1300, 30),
+                area(),
+                body(),
+            ])
             player.onUpdate(() => {
                 // center camera to player
                 camPos(player.pos)
                 // check fall death
+
                 console.log( player.pos.y);
                 if (player.pos.y > yend) {
                     go("map")
                     
                 }
+                
+            })
+            gegener.onUpdate(() => {
+
+                if(gegenermove = 1){
+                    gegener.move(-MOVE_SPEED, 0)
+                }
+
+                if(gegenermove = 0){
+                    gegener.move(MOVE_SPEED, 0)
+                }
+
+
+            })
+            onCollide("player", "block", () => {
+                if(gegenermove = 1){
+                    gegenermove = 0
+                }
+                if(gegenermove = 0){
+                    gegenermove = 1
+                }
+                go("map")
             })
             //sprigen 
             onKeyPress("space", () => {
